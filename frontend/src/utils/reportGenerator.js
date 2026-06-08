@@ -1,0 +1,396 @@
+import { jsPDF } from "jspdf";
+
+export const generatePDFReport = (result) => {
+  const doc = new jsPDF();
+
+let y = 20;
+
+const checkPageBreak = () => {
+  if (y > 260) {
+    doc.addPage();
+    y = 20;
+  }
+};
+
+  // Header
+
+  checkPageBreak();
+  doc.setFontSize(22);
+  doc.setTextColor(37, 99, 235);
+  doc.text("EduScope AI Agent 2.0", 20, y);
+
+  y += 10;
+
+  doc.setFontSize(12);
+  doc.setTextColor(100);
+  doc.text(
+    "AI-Powered Student Success Intelligence Report",
+    20,
+    y
+  );
+
+  y += 20;
+
+// Student Details
+checkPageBreak();
+doc.setFontSize(16);
+doc.setTextColor(0);
+doc.text("Student Information", 20, y);
+
+y += 10;
+
+doc.setFontSize(12);
+
+doc.text(
+  `Student Name: ${result.studentName}`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Generated On: ${new Date().toLocaleDateString()}`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Risk Score: ${result.riskScore}%`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Risk Level: ${result.riskLevel}`,
+  20,
+  y
+);
+
+y += 15;
+
+  // Student Profile
+
+checkPageBreak();
+doc.setFontSize(16);
+doc.text("Student Profile", 20, y);
+
+y += 10;
+
+doc.setFontSize(11);
+
+doc.text(
+  `Attendance: ${result.studentData?.attendance}%`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Marks: ${result.studentData?.marks}`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Assignments: ${result.studentData?.assignments}`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `GPA: ${result.studentData?.gpa}`,
+  20,
+  y
+);
+
+y += 15;
+
+  // AI Reasoning
+
+  checkPageBreak();
+  doc.setFontSize(16);
+  doc.text("AI Reasoning", 20, y);
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  result.reasoning?.forEach((item) => {
+    doc.text(`• ${item}`, 25, y);
+    y += 8;
+  });
+
+  y += 10;
+
+  // Roadmap
+  doc.setFontSize(16);
+  doc.text("Learning Roadmap", 20, y);
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  result.roadmap?.forEach((item) => {
+    doc.text(`• ${item}`, 25, y);
+    y += 8;
+  });
+
+  y += 10;
+
+  // Recommendations
+  doc.setFontSize(16);
+  doc.text("Recommendations", 20, y);
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  result.recommendations?.forEach((item) => {
+    doc.text(`• ${item}`, 25, y);
+    y += 8;
+  });
+
+  y += 10;
+
+  // AI Academic Success Agent
+
+  checkPageBreak();
+  doc.setFontSize(16);
+  doc.text(
+    "AI Academic Success Agent",
+    20,
+    y
+  );
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  const agentText = doc.splitTextToSize(
+    result.agentReasoning || "",
+    170
+  );
+
+  doc.text(agentText, 20, y);
+
+  y += agentText.length * 6 + 10;
+
+  // Student Summary
+
+  checkPageBreak();
+  doc.setFontSize(16);
+  doc.text("Student Summary", 20, y);
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  doc.text(
+    `Status: ${result.summary?.status}`,
+    20,
+    y
+  );
+
+  y += 8;
+
+  const summaryText = doc.splitTextToSize(
+    result.summary?.summary || "",
+    170
+  );
+
+  doc.text(summaryText, 20, y);
+
+  y += summaryText.length * 6 + 8;
+
+  const outcomeText = doc.splitTextToSize(
+    result.summary?.outcome || "",
+    170
+  );
+
+  doc.text(
+    `Expected Outcome:`,
+    20,
+    y
+  );
+
+  y += 8;
+
+  doc.text(outcomeText, 20, y);
+
+  y += outcomeText.length * 6 + 10;
+
+  doc.setFontSize(16);
+doc.text(
+  "Student Success Prediction",
+  20,
+  y
+);
+
+y += 10;
+
+doc.setFontSize(11);
+
+doc.text(
+  `Success Probability: ${result.successPrediction?.probability}`,
+  20,
+  y
+);
+
+y += 8;
+
+const successText = doc.splitTextToSize(
+  result.successPrediction?.message || "",
+  170
+);
+
+doc.text(successText, 20, y);
+
+y += successText.length * 6 + 10;
+
+  // Future Prediction
+
+  checkPageBreak();
+  doc.setFontSize(16);
+  doc.text(
+    "Future Risk Prediction",
+    20,
+    y
+  );
+
+  y += 10;
+
+  doc.setFontSize(11);
+
+  doc.text(
+    `Predicted Risk: ${result.futurePrediction?.predictedRisk}`,
+    20,
+    y
+  );
+
+  y += 8;
+
+  doc.text(
+    `Confidence Score: ${result.futurePrediction?.confidence}`,
+    20,
+    y
+  );
+
+  y += 8;
+
+  const futureText = doc.splitTextToSize(
+    result.futurePrediction?.message || "",
+    170
+  );
+
+  doc.text(futureText, 20, y);
+
+  y += futureText.length * 6 + 15;
+
+  doc.setFontSize(16);
+doc.text(
+  "Intervention Priority",
+  20,
+  y
+);
+
+y += 10;
+
+doc.setFontSize(11);
+
+doc.text(
+  `Priority Level: ${result.interventionPriority?.priority}`,
+  20,
+  y
+);
+
+y += 8;
+
+doc.text(
+  `Action Required: ${result.interventionPriority?.message}`,
+  20,
+  y
+);
+
+y += 15;
+
+doc.setFontSize(16);
+doc.text(
+  "Faculty Action Plan",
+  20,
+  y
+);
+
+y += 10;
+
+doc.setFontSize(11);
+
+result.facultyActionPlan?.forEach((item) => {
+  doc.text(`• ${item}`, 25, y);
+  y += 8;
+});
+
+y += 10;
+
+doc.setFontSize(16);
+doc.text(
+  "Knowledge Retrieval Layer",
+  20,
+  y
+);
+
+y += 10;
+
+doc.setFontSize(11);
+
+result.retrievedKnowledge?.forEach((item) => {
+
+  doc.text(
+    `Source: ${item.title}`,
+    20,
+    y
+  );
+
+  y += 8;
+
+  const knowledgeText =
+  doc.splitTextToSize(
+    item.content || "",
+    170
+  );
+
+  doc.text(
+    knowledgeText,
+    20,
+    y
+  );
+
+  y += knowledgeText.length * 6 + 10;
+
+});
+
+  // Footer
+
+  checkPageBreak();
+ doc.setFontSize(10);
+doc.setTextColor(120);
+
+doc.text(
+  "Generated by EduScope AI Agent 2.0 | Microsoft AI Multi-Agent Student Success System",
+  20,
+  285
+);
+
+  doc.save(
+    `${result.studentName}_EduScope_Report.pdf`
+  );
+};
