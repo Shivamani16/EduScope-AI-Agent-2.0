@@ -23,7 +23,7 @@ function StudentForm({ setAnalysisResult }) {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/analyze",
+         "https://eduscope-ai-agent-2-0.onrender.com/analyze",
         {
           method: "POST",
           headers: {
